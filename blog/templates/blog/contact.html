@@ -1,0 +1,52 @@
+{% extends 'blog/base.html' %}
+{% load crispy_forms_tags %}
+{% block body_block %}
+
+<section class="contact-header text-center text-light">
+    <div class="container">
+        <div class="row">
+            <div class="col p-5">
+                <h2>Contact Us</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos, doloribus.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="contact py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <h5 class="card-header">Please fill out this form to contact us</h5>
+                    <div class="card-body">
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ form|crispy }}
+                            <button type="submit" class="save btn btn-secondary">Send</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <h5 class="card-header">Contact</h5>
+                    <div class="card-body">
+                        <h4>Get In Touch</h4>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos, doloribus.</p>
+                        <h4>Address</h4>
+                        <p>Bashundhara Residential Area, Dhaka</p>
+                        <h4>Email</h4>
+                        <p>tawhidhasan44@gmail.com</p>
+                        <h4>Phone</h4>
+                        <p class="mb-2">01516773403</p>
+                        <p>01738431740</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- <script>var editor = new MediumEditor('.editable');</script> -->
+
+{% endblock %}

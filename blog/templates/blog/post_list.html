@@ -1,0 +1,131 @@
+{% extends 'blog/base.html' %}
+
+{% block body_block %}
+<section id="blog-page-header" class="text-center text-light">
+    <div class="container">
+        <div class="row">
+            <div class="col pt-5">
+                <h2>Welcome to BloggersForum</h2>
+                <h4>Here you can post your blog on Website Development!</h4>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Blog Post -->
+<div class="container">
+<div class="row">
+    <div class="col"> 
+    <div class="card-columns">
+        {% for post in post_list %}
+        
+            <div class="blog-posts">
+                <div class="card">
+                    <img class="card-img-top img-fluid" id="blog-img" src="{{ post.image.url }}" alt="Card image cap">
+                    <div class="card-body">
+                        <div class="card-title">
+                            <h4><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h4>
+                            <small class="text-muted">by <a href="#">{{ post.author }}</a></small>
+                        </div>
+                        <a href="{% url 'post_detail' pk=post.pk %}" class="btn btn-dark">Read More &rarr;</a>
+                    </div>
+                    <div class="card-footer text-muted">
+                        Posted on {{ post.published_date|date }}   
+                        <a class="float-right" href="{% url 'post_detail' pk=post.pk %}">Comments: <span class="badge badge-success">{{ post.approve_comments.count }}</span></a>
+                    </div>
+                </div>                                     
+            </div>
+        
+        {% endfor %}     
+    </div>
+    </div>
+
+
+<!-- Sidebar Widgets Column -->
+    <!-- <div class="col-6 col-md-4">
+         Search Widget -->
+        <!-- <div class="card my-4">
+            <h5 class="card-header">Search</h5>
+            <div class="card-body">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search for...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-secondary" type="button">Go!</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    
+         Categories Widget -->
+        
+        <!-- <div class="card my-4">
+            <h5 class="card-header">Categories</h5>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <ul class="list-unstyled mb-0">
+                            <li>
+                                <a href="#">Web Design</a>
+                            </li>
+                            <li>
+                                <a href="#">HTML</a>
+                            </li>
+                            <li>
+                                <a href="#">Freebies</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-6">
+                        <ul class="list-unstyled mb-0">
+                        <li>
+                            <a href="#">JavaScript</a>
+                        </li>
+                        <li>
+                            <a href="#">CSS</a>
+                        </li>
+                        <li>
+                            <a href="#">Tutorials</a>
+                        </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         Side Widget -->
+        
+        <!-- <div class="card my-4">
+            <h5 class="card-header">Side Widget</h5>
+            <div class="card-body">
+                You can put anything you want inside of these side widgets. They are easy to use, and feature the new Bootstrap 4 card containers!
+            </div>
+        </div>
+    </div>  -->
+
+
+</div>
+<div class="container pagination">
+    {% if is_paginated %}
+        {% if page_obj.has_previous %}
+            <a class="btn btn-outline-info mb-4" href="?page=1">&laquo; First</a>
+            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+        {% endif %}
+
+    {% endif %}
+</div>
+</div>
+
+{% endblock %}

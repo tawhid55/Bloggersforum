@@ -1,0 +1,214 @@
+{% extends 'blog/base.html' %}
+{% load crispy_forms_tags %}
+{% block body_block %}
+
+
+<!-- Page Content -->
+<div class="container">
+  <div class="row">
+
+    <!-- Post Content Column -->
+    <div class="col-lg-8">
+      <div class="row">
+        <div class="col-lg-9">
+          <!-- Title -->
+          <h1>{{ post.title }}</h1>
+
+          <!-- Author -->
+          <p class="lead">
+            by
+            <a href="#"><strong></strong>{{ post.author }}</strong></a>
+          </p>
+        </div>
+        <div class="col-lg-3">
+          {% if user.is_authenticated %}
+            <a class="btn btn-secondary" href="{% url 'post_edit' pk=post.pk %}">
+              Edit
+            </a>
+            <a class="btn btn-danger" href="{% url 'post_remove' pk=post.pk %}">
+              Delete
+            </a>
+        {% endif %}
+        </div>
+      </div>
+      
+
+      <hr>
+
+      <!-- Date/Time -->
+      {% if post.published_date %}
+        <div class="date">
+          <p>Posted on {{ post.published_date }}</p>
+        </div>
+      {% else %}
+        <a class="btn btn-secondary" href="{% url 'post_publish' pk=post.pk %}">Publish</a>
+      {% endif %}
+
+      <hr>
+      <!-- Preview Image -->
+      <img class="img-fluid rounded" id="post-detail-img" src="{{ post.image.url }}" alt="">
+      <hr>
+
+      <!-- Post Content -->
+      <div class="container">
+        <p>{{ post.text|safe|linebreaksbr }}</p>
+      </div>
+      <hr>
+      <!-- Comments Form -->
+      <div class="card my-4 commentbox">
+        <h5 class="card-header">Leave a Comment:</h5>
+        <div class="card-body">
+          <form method="POST" enctype="multipart/form-data" class="post-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="save btn btn-secondary">Post Comment</button>
+          </form>
+        </div>
+      </div>
+      
+      <!-- Single Comment -->
+
+      {% for comment in post.comments.all %}
+      {% if user.is_authenticated or comment.approved_comment %}
+      <div class="media mb-4">
+        <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+        <div class="media-body">
+          <h5 class="mt-0">{{ comment.name|capfirst }}
+          {% if user.is_authenticated %}
+                  {% if comment.approved_comment %}
+                    <a class="btn btn-danger" href="{% url 'comment_remove' pk=comment.pk %}">
+                      Delete
+                    </a>
+                  {% endif %}
+              {% endif %}
+              {% if not comment.approved_comment %}
+                  <a class="btn btn-secondary" href="{% url 'comment_approve' pk=comment.pk %}">
+                    Approve
+                  </a>
+                  <a class="btn btn-danger" href="{% url 'comment_remove' pk=comment.pk %}">
+                    Cancel
+                  </a>
+              {% endif %}
+            </h5>
+          <hr>
+          {{ comment.text|safe|linebreaks }}
+          {{ comment.created_date }}
+        </div>
+      </div>    
+      {% endif %}
+      {% empty %}
+        <p>No comments yet!!</p>
+      {% endfor %}
+
+
+
+
+
+
+
+
+
+
+
+      
+
+      <!-- Comment with nested comments -->
+      <!-- <div class="media mb-4">
+        <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+        <div class="media-body">
+          <h5 class="mt-0">Commenter Name</h5>
+          Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+
+          <div class="media mt-4">
+            <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+            <div class="media-body">
+              <h5 class="mt-0">Commenter Name</h5>
+              Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+            </div>
+          </div>
+
+          <div class="media mt-4">
+            <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+            <div class="media-body">
+              <h5 class="mt-0">Commenter Name</h5>
+              Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div> -->
+    </div>
+
+    <!-- Sidebar Widgets Column -->
+    <div class="col-md-4">
+
+      <!-- Search Widget -->
+      <div class="card my-4">
+        <h5 class="card-header">Search</h5>
+        <div class="card-body">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search for...">
+            <span class="input-group-btn">
+              <button class="btn btn-secondary" type="button">Go!</button>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Categories Widget -->
+      <div class="card my-4">
+        <h5 class="card-header">Categories</h5>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-lg-6">
+              <ul class="list-unstyled mb-0">
+                <li>
+                  <a href="#">Web Design</a>
+                </li>
+                <li>
+                  <a href="#">HTML</a>
+                </li>
+                <li>
+                  <a href="#">Freebies</a>
+                </li>
+              </ul>
+            </div>
+            <div class="col-lg-6">
+              <ul class="list-unstyled mb-0">
+                <li>
+                  <a href="#">JavaScript</a>
+                </li>
+                <li>
+                  <a href="#">CSS</a>
+                </li>
+                <li>
+                  <a href="#">Tutorials</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Side Widget -->
+      <div class="card my-4">
+        <h5 class="card-header">Side Widget</h5>
+        <div class="card-body">
+          You can put anything you want inside of these side widgets. They are easy to use, and feature the new Bootstrap 4 card containers!
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  
+
+
+
+</div>
+<script>var editor = new MediumEditor('.editable');</script>
+
+
+{% endblock %}
